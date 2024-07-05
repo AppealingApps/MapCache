@@ -41,10 +41,13 @@ extension MKMapView {
         
         tileServerOverlay.tileSize = cache.config.tileSize
         if let firstOverlay = self.overlays.first {
-            self.insertOverlay(tileServerOverlay, below: firstOverlay)
+            self.insertOverlay(tileServerOverlay, at: 0, level: .aboveRoads)
+            if self.overlays.count > 1 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { self.removeOverlays(Array(self.overlays.dropFirst())) }
+            }
         }
         else {
-            self.addOverlay(tileServerOverlay, level: .aboveLabels)
+            self.addOverlay(tileServerOverlay, level: .aboveRoads)
         }
         return tileServerOverlay
     }
